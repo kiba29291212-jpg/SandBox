@@ -7,6 +7,7 @@ using UnityEngine;
 public class WorldChunk : MonoBehaviour
 {
     private MeshFilter meshFilter;
+    private MeshRenderer meshRenderer;
     private MeshCollider meshCollider;
     private ResourceSpawner resourceSpawner;
 
@@ -18,39 +19,46 @@ public class WorldChunk : MonoBehaviour
     private void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
+        meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
         resourceSpawner = GetComponent<ResourceSpawner>();
 
         Debug.Log("WorldChunk Awake: " + gameObject.name);
     }
 
-   public void Generate(Vector2Int chunkCoordinate, int chunkSize, float heightMultiplier, float noiseScale, int seed)
-{
-    this.chunkSize = chunkSize;
-    this.heightMultiplier = heightMultiplier;
-    this.noiseScale = noiseScale;
-    this.seed = seed;
-
-    Debug.Log("WorldChunk Generate: " + gameObject.name);
-
-    GenerateMesh(chunkCoordinate);
-
-    Debug.Log("WorldChunk Mesh Generated");
-
-    Debug.Log("ResourceSpawner reference = " + resourceSpawner);
-
-    if (resourceSpawner == null)
+    public void Generate(
+        Vector2Int chunkCoordinate,
+        int chunkSize,
+        float heightMultiplier,
+        float noiseScale,
+        int seed)
     {
-        Debug.LogError("RESOURCE SPAWNER IS NULL!");
-        return;
+        this.chunkSize = chunkSize;
+        this.heightMultiplier = heightMultiplier;
+        this.noiseScale = noiseScale;
+        this.seed = seed;
+
+        Debug.Log("WorldChunk Generate: " + gameObject.name);
+
+        GenerateMesh(chunkCoordinate);
+
+        Debug.Log("WorldChunk Mesh Generated");
+
+        Debug.Log("ResourceSpawner reference = " + resourceSpawner);
+
+        if (resourceSpawner == null)
+        {
+            Debug.LogError("RESOURCE SPAWNER IS NULL!");
+            return;
+        }
+
+        Debug.Log("CALLING RESOURCE SPAWNER...");
+
+        resourceSpawner.Spawn(chunkCoordinate, chunkSize, seed);
+
+        Debug.Log("RESOURCE SPAWNER FINISHED!");
     }
 
-    Debug.Log("CALLING RESOURCE SPAWNER...");
-
-    resourceSpawner.Spawn(chunkCoordinate, chunkSize, seed);
-
-    Debug.Log("RESOURCE SPAWNER FINISHED!");
-}
     private void GenerateMesh(Vector2Int chunkCoordinate)
     {
         int vertexCount = chunkSize + 1;
@@ -120,14 +128,31 @@ public class WorldChunk : MonoBehaviour
         meshCollider.sharedMesh = mesh;
     }
 
+    public Bounds GetBounds()
+    {
+        return meshRenderer.bounds;
+    }
+
     public void SetVisible(bool visible)
     {
-        GetComponent<MeshRenderer>().enabled = visible;
+        meshRenderer.enabled = visible;
         meshCollider.enabled = visible;
 
         foreach (Transform child in transform)
         {
             child.gameObject.SetActive(visible);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (meshRenderer == null)
+            meshRenderer = GetComponent<MeshRenderer>();
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(
+            meshRenderer.bounds.center,
+            meshRenderer.bounds.size
+        );
     }
 }

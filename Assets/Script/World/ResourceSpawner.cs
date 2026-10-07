@@ -9,13 +9,22 @@ public class ResourceSpawner : MonoBehaviour
     [SerializeField] private int resourceCount = 20;
     [SerializeField] private float minDistance = 3f;
 
+    [Header("Ground")]
+    [SerializeField] private float raycastHeight = 100f;
+
     private int chunkSize;
+    private MeshCollider terrainCollider;
 
     public void Spawn(Vector2Int chunkCoordinate, int chunkSize, int seed)
     {
         this.chunkSize = chunkSize;
+        terrainCollider = GetComponent<MeshCollider>();
 
-        Debug.Log("RESOURCE SPAWN START");
+        if (terrainCollider == null)
+        {
+            Debug.LogError("NO TERRAIN MESH COLLIDER!");
+            return;
+        }
 
         Random.InitState(seed + chunkCoordinate.x * 10000 + chunkCoordinate.y);
 
@@ -40,10 +49,19 @@ public class ResourceSpawner : MonoBehaviour
             float x = Random.Range(2f, chunkSize - 2f);
             float z = Random.Range(2f, chunkSize - 2f);
 
-            // Tạm thời đặt cây ở độ cao cố định
-            float y = 10f;
+            Vector3 rayOrigin = transform.position + new Vector3(x, raycastHeight, z);
 
-            Vector3 spawnPosition = transform.position + new Vector3(x, y, z);
+            if (!Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, raycastHeight * 2f))
+            {
+                continue;
+            }
+
+            if (hit.collider != terrainCollider)
+            {
+                continue;
+            }
+
+            Vector3 spawnPosition = hit.point;
 
             if (!CanSpawn(spawnPosition))
             {
@@ -52,19 +70,40 @@ public class ResourceSpawner : MonoBehaviour
 
             GameObject prefab = resourcePrefabs[Random.Range(0, resourcePrefabs.Length)];
 
-            Instantiate(
+            GameObject resource = Instantiate(
                 prefab,
                 spawnPosition,
                 Quaternion.Euler(0f, Random.Range(0f, 360f), 0f),
                 transform
             );
 
-            spawnedCount++;
+            AlignToGround(resource, hit.point);
 
-            Debug.Log("TREE SPAWNED: " + spawnedCount);
+            spawnedCount++;
         }
 
-        Debug.Log("TOTAL TREES: " + spawnedCount);
+        Debug.Log("TOTAL RESOURCES: " + spawnedCount);
+    }
+
+    private void AlignToGround(GameObject resource, Vector3 groundPosition)
+    {
+        Renderer[] renderers = resource.GetComponentsInChildren<Renderer>();
+
+        if (renderers.Length == 0)
+        {
+            return;
+        }
+
+        Bounds bounds = renderers[0].bounds;
+
+        foreach (Renderer renderer in renderers)
+        {
+            bounds.Encapsulate(renderer.bounds);
+        }
+
+        float offset = groundPosition.y - bounds.min.y;
+
+        resource.transform.position += Vector3.up * offset;
     }
 
     private bool CanSpawn(Vector3 position)

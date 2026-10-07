@@ -6,6 +6,9 @@ public class WorldGenerator : MonoBehaviour
     [Header("Player")]
     [SerializeField] private Transform player;
 
+    [Header("Camera")]
+    [SerializeField] private Camera playerCamera;
+
     [Header("Chunk")]
     [SerializeField] private WorldChunk chunkPrefab;
     [SerializeField] private int chunkSize = 32;
@@ -19,15 +22,25 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private int renderDistance = 4;
     [SerializeField] private int loadDistance = 6;
 
-    private Dictionary<Vector2Int, WorldChunk> loadedChunks = new Dictionary<Vector2Int, WorldChunk>();
+    [Header("Always Visible")]
+    [SerializeField] private int alwaysVisibleDistance = 1;
+
+    private Dictionary<Vector2Int, WorldChunk> loadedChunks =
+        new Dictionary<Vector2Int, WorldChunk>();
 
     private Vector2Int currentPlayerChunk;
+
+    private Plane[] cameraPlanes;
 
     private void Start()
     {
         Debug.Log("WORLD GENERATOR START");
 
+        if (playerCamera == null)
+            playerCamera = Camera.main;
+
         currentPlayerChunk = GetPlayerChunk();
+
         UpdateChunks();
     }
 
@@ -40,6 +53,8 @@ public class WorldGenerator : MonoBehaviour
             currentPlayerChunk = playerChunk;
             UpdateChunks();
         }
+
+        UpdateChunkVisibility();
     }
 
     private Vector2Int GetPlayerChunk()
@@ -56,14 +71,10 @@ public class WorldGenerator : MonoBehaviour
         {
             for (int z = -loadDistance; z <= loadDistance; z++)
             {
-                Vector2Int chunkCoordinate = currentPlayerChunk + new Vector2Int(x, z);
+                Vector2Int chunkCoordinate =
+                    currentPlayerChunk + new Vector2Int(x, z);
 
-                float distance = Vector2Int.Distance(currentPlayerChunk, chunkCoordinate);
-
-                if (distance <= loadDistance)
-                {
-                    LoadChunk(chunkCoordinate);
-                }
+                LoadChunk(chunkCoordinate);
             }
         }
 
@@ -71,70 +82,142 @@ public class WorldGenerator : MonoBehaviour
         UnloadFarChunks();
     }
 
-   private void LoadChunk(Vector2Int chunkCoordinate)
-{
-    Debug.Log("LOAD CHUNK: " + chunkCoordinate);
-
-    if (loadedChunks.ContainsKey(chunkCoordinate))
+    private void LoadChunk(Vector2Int chunkCoordinate)
     {
-        Debug.Log("CHUNK ALREADY EXISTS: " + chunkCoordinate);
-        return;
+        if (loadedChunks.ContainsKey(chunkCoordinate))
+            return;
+
+        Debug.Log("LOAD CHUNK: " + chunkCoordinate);
+
+        WorldChunk chunk = Instantiate(
+            chunkPrefab,
+            transform
+        );
+
+        chunk.name =
+            "Chunk " +
+            chunkCoordinate.x +
+            "_" +
+            chunkCoordinate.y;
+
+        chunk.transform.position = new Vector3(
+            chunkCoordinate.x * chunkSize,
+            0f,
+            chunkCoordinate.y * chunkSize
+        );
+
+        chunk.Generate(
+            chunkCoordinate,
+            chunkSize,
+            heightMultiplier,
+            noiseScale,
+            seed
+        );
+
+        loadedChunks.Add(chunkCoordinate, chunk);
     }
 
-    WorldChunk chunk = Instantiate(chunkPrefab, transform);
-
-    Debug.Log("CHUNK INSTANTIATED: " + chunk.name);
-
-    chunk.transform.position = new Vector3(
-        chunkCoordinate.x * chunkSize,
-        0f,
-        chunkCoordinate.y * chunkSize
-    );
-
-    Debug.Log("CALLING CHUNK GENERATE: " + chunkCoordinate);
-
-    chunk.Generate(
-        chunkCoordinate,
-        chunkSize,
-        heightMultiplier,
-        noiseScale,
-        seed
-    );
-
-    Debug.Log("CHUNK GENERATE FINISHED: " + chunkCoordinate);
-
-    loadedChunks.Add(chunkCoordinate, chunk);
-}
     private void UpdateChunkVisibility()
     {
+        if (playerCamera == null)
+            return;
+
+        cameraPlanes = GeometryUtility.CalculateFrustumPlanes(
+            playerCamera
+        );
+
         foreach (KeyValuePair<Vector2Int, WorldChunk> chunk in loadedChunks)
         {
-            float distance = Vector2Int.Distance(currentPlayerChunk, chunk.Key);
+            Vector2Int coordinate = chunk.Key;
 
-            bool visible = distance <= renderDistance;
+            bool alwaysVisible =
+                IsInsideAlwaysVisibleDistance(coordinate);
 
-            chunk.Value.SetVisible(visible);
+            if (alwaysVisible)
+            {
+                chunk.Value.SetVisible(true);
+                continue;
+            }
+
+            bool insideRenderDistance =
+                IsInsideRenderDistance(coordinate);
+
+            if (!insideRenderDistance)
+            {
+                chunk.Value.SetVisible(false);
+                continue;
+            }
+
+            bool insideCamera =
+                GeometryUtility.TestPlanesAABB(
+                    cameraPlanes,
+                    chunk.Value.GetBounds()
+                );
+
+            chunk.Value.SetVisible(insideCamera);
         }
+    }
+
+    private bool IsInsideAlwaysVisibleDistance(
+        Vector2Int chunkCoordinate)
+    {
+        int xDistance = Mathf.Abs(
+            chunkCoordinate.x - currentPlayerChunk.x
+        );
+
+        int zDistance = Mathf.Abs(
+            chunkCoordinate.y - currentPlayerChunk.y
+        );
+
+        return
+            xDistance <= alwaysVisibleDistance &&
+            zDistance <= alwaysVisibleDistance;
+    }
+
+    private bool IsInsideRenderDistance(
+        Vector2Int chunkCoordinate)
+    {
+        int xDistance = Mathf.Abs(
+            chunkCoordinate.x - currentPlayerChunk.x
+        );
+
+        int zDistance = Mathf.Abs(
+            chunkCoordinate.y - currentPlayerChunk.y
+        );
+
+        return
+            xDistance <= renderDistance &&
+            zDistance <= renderDistance;
     }
 
     private void UnloadFarChunks()
     {
-        List<Vector2Int> chunksToRemove = new List<Vector2Int>();
+        List<Vector2Int> chunksToRemove =
+            new List<Vector2Int>();
 
         foreach (KeyValuePair<Vector2Int, WorldChunk> chunk in loadedChunks)
         {
-            float distance = Vector2Int.Distance(currentPlayerChunk, chunk.Key);
+            int xDistance = Mathf.Abs(
+                chunk.Key.x - currentPlayerChunk.x
+            );
 
-            if (distance > loadDistance)
+            int zDistance = Mathf.Abs(
+                chunk.Key.y - currentPlayerChunk.y
+            );
+
+            bool outsideLoadDistance =
+                xDistance > loadDistance ||
+                zDistance > loadDistance;
+
+            if (outsideLoadDistance)
             {
                 Destroy(chunk.Value.gameObject);
+
                 chunksToRemove.Add(chunk.Key);
             }
         }
 
         foreach (Vector2Int coordinate in chunksToRemove)
-        {
             loadedChunks.Remove(coordinate);
-        }
     }
 }
