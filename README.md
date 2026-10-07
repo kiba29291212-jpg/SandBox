@@ -1,4 +1,4 @@
-# DON'T LOOK AT IT
+# GCC - DON'T LOOK AT IT
 
 A 3D survival game for the finale of the Unity course.
 
