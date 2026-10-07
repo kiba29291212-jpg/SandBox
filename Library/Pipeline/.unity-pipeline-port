@@ -1,0 +1,16 @@
+{
+  "pid": 17352,
+  "port": 7801,
+  "projectPath": "C:\\Users\\ThanhLVT\\ThanhLVT\\3d Game\\SandBox",
+  "projectName": "SandBox",
+  "unityVersion": "6000.3.9f1",
+  "mode": "editor",
+  "startedAt": "2026-10-07T08:40:36.6644578Z",
+  "lastHeartbeat": "2026-10-07T08:40:36.6644578Z",
+  "evalToken": "Fc0T0/Th1gOemLHni30BLFX7yXFZ+aD6TxLVL56TsqI=",
+  "info": "This editor has not been opened in automated mode and therefore could get stuck on modal dialogs. Human intervention may be required.",
+  "capabilities": [
+    "exec.argv",
+    "exec.commandLine"
+  ]
+}
