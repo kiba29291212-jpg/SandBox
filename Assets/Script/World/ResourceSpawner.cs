@@ -12,12 +12,10 @@ public class ResourceSpawner : MonoBehaviour
     [Header("Ground")]
     [SerializeField] private float raycastHeight = 100f;
 
-    private int chunkSize;
     private MeshCollider terrainCollider;
 
-    public void Spawn(Vector2Int chunkCoordinate, int chunkSize, int seed)
+    public void Spawn(Vector2Int chunkCoordinate, int chunkSize, int seed, WorldGenerator worldGenerator)
     {
-        this.chunkSize = chunkSize;
         terrainCollider = GetComponent<MeshCollider>();
 
         if (terrainCollider == null)
@@ -28,54 +26,46 @@ public class ResourceSpawner : MonoBehaviour
 
         Random.InitState(seed + chunkCoordinate.x * 10000 + chunkCoordinate.y);
 
-        SpawnResources();
+        SpawnResources(chunkSize, worldGenerator);
     }
 
-    private void SpawnResources()
+    private void SpawnResources(int chunkSize, WorldGenerator worldGenerator)
     {
         if (resourcePrefabs == null || resourcePrefabs.Length == 0)
-        {
-            Debug.LogError("NO RESOURCE PREFAB!");
             return;
-        }
 
         int spawnedCount = 0;
-        int attempts = 0;
 
-        while (spawnedCount < resourceCount && attempts < resourceCount * 10)
+        for (int i = 0; i < resourceCount; i++)
         {
-            attempts++;
-
             float x = Random.Range(2f, chunkSize - 2f);
             float z = Random.Range(2f, chunkSize - 2f);
 
-            Vector3 rayOrigin = transform.position + new Vector3(x, raycastHeight, z);
+            float worldX = transform.position.x + x;
+            float worldZ = transform.position.z + z;
+
+            float density = worldGenerator.GetResourceDensity(worldX, worldZ);
+
+            if (density <= 0f || Random.value > density)
+                continue;
+
+            Vector3 rayOrigin = new Vector3(worldX, transform.position.y + raycastHeight, worldZ);
 
             if (!Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, raycastHeight * 2f))
-            {
                 continue;
-            }
 
             if (hit.collider != terrainCollider)
-            {
                 continue;
-            }
 
-            Vector3 spawnPosition = hit.point;
-
-            if (!CanSpawn(spawnPosition))
-            {
+            if (hit.point.y <= worldGenerator.GetSeaLevel())
                 continue;
-            }
+
+            if (!CanSpawn(hit.point))
+                continue;
 
             GameObject prefab = resourcePrefabs[Random.Range(0, resourcePrefabs.Length)];
 
-            GameObject resource = Instantiate(
-                prefab,
-                spawnPosition,
-                Quaternion.Euler(0f, Random.Range(0f, 360f), 0f),
-                transform
-            );
+            GameObject resource = Instantiate(prefab, hit.point, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), transform);
 
             AlignToGround(resource, hit.point);
 
@@ -90,16 +80,12 @@ public class ResourceSpawner : MonoBehaviour
         Renderer[] renderers = resource.GetComponentsInChildren<Renderer>();
 
         if (renderers.Length == 0)
-        {
             return;
-        }
 
         Bounds bounds = renderers[0].bounds;
 
         foreach (Renderer renderer in renderers)
-        {
             bounds.Encapsulate(renderer.bounds);
-        }
 
         float offset = groundPosition.y - bounds.min.y;
 
@@ -111,9 +97,7 @@ public class ResourceSpawner : MonoBehaviour
         foreach (Transform child in transform)
         {
             if (Vector3.Distance(position, child.position) < minDistance)
-            {
                 return false;
-            }
         }
 
         return true;

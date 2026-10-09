@@ -1,5 +1,14 @@
 using UnityEngine;
 
+public enum BiomeType
+{
+    Ocean,
+    Desert,
+    Grassland,
+    SparseForest,
+    Forest
+}
+
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
@@ -12,9 +21,6 @@ public class WorldChunk : MonoBehaviour
     private ResourceSpawner resourceSpawner;
 
     private int chunkSize;
-    private float heightMultiplier;
-    private float noiseScale;
-    private int seed;
 
     private void Awake()
     {
@@ -22,49 +28,44 @@ public class WorldChunk : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
         resourceSpawner = GetComponent<ResourceSpawner>();
-
-        Debug.Log("WorldChunk Awake: " + gameObject.name);
     }
 
-    public void Generate(
-        Vector2Int chunkCoordinate,
-        int chunkSize,
-        float heightMultiplier,
-        float noiseScale,
-        int seed)
+    public void Generate(Vector2Int chunkCoordinate, int chunkSize, float heightMultiplier, float noiseScale, int seed, WorldGenerator worldGenerator)
     {
         this.chunkSize = chunkSize;
-        this.heightMultiplier = heightMultiplier;
-        this.noiseScale = noiseScale;
-        this.seed = seed;
 
-        Debug.Log("WorldChunk Generate: " + gameObject.name);
+        GenerateMesh(chunkCoordinate, worldGenerator);
 
-        GenerateMesh(chunkCoordinate);
+        float centerX = chunkCoordinate.x * chunkSize + chunkSize / 2f;
+        float centerZ = chunkCoordinate.y * chunkSize + chunkSize / 2f;
 
-        Debug.Log("WorldChunk Mesh Generated");
-
-        Debug.Log("ResourceSpawner reference = " + resourceSpawner);
-
-        if (resourceSpawner == null)
+        if (worldGenerator.biomeBlendMaterial != null)
         {
-            Debug.LogError("RESOURCE SPAWNER IS NULL!");
-            return;
+            meshRenderer.sharedMaterial = worldGenerator.biomeBlendMaterial;
+        }
+        else
+        {
+            BiomeType biome = worldGenerator.GetBiome(centerX, centerZ);
+
+            Material biomeMaterial = worldGenerator.GetBiomeMaterial(biome);
+
+            if (biomeMaterial != null)
+                meshRenderer.sharedMaterial = biomeMaterial;
         }
 
-        Debug.Log("CALLING RESOURCE SPAWNER...");
-
-        resourceSpawner.Spawn(chunkCoordinate, chunkSize, seed);
-
-        Debug.Log("RESOURCE SPAWNER FINISHED!");
+        resourceSpawner.Spawn(chunkCoordinate, chunkSize, seed, worldGenerator);
     }
 
-    private void GenerateMesh(Vector2Int chunkCoordinate)
+    private void GenerateMesh(Vector2Int chunkCoordinate, WorldGenerator worldGenerator)
     {
         int vertexCount = chunkSize + 1;
+        int vertexCountTotal = vertexCount * vertexCount;
 
-        Vector3[] vertices = new Vector3[vertexCount * vertexCount];
-        Vector2[] uvs = new Vector2[vertices.Length];
+        Vector3[] vertices = new Vector3[vertexCountTotal];
+        Vector2[] uvs = new Vector2[vertexCountTotal];
+        Color[] colors = new Color[vertexCountTotal];
+        Vector3[] normals = new Vector3[vertexCountTotal];
+
         int[] triangles = new int[chunkSize * chunkSize * 6];
 
         for (int z = 0; z <= chunkSize; z++)
@@ -76,18 +77,24 @@ public class WorldChunk : MonoBehaviour
                 float worldX = chunkCoordinate.x * chunkSize + x;
                 float worldZ = chunkCoordinate.y * chunkSize + z;
 
-                float height = Mathf.PerlinNoise(
-                    (worldX + seed) * noiseScale,
-                    (worldZ + seed) * noiseScale
-                );
-
-                height *= heightMultiplier;
+                float height = worldGenerator.GetTerrainHeight(worldX, worldZ);
 
                 vertices[index] = new Vector3(x, height, z);
-                uvs[index] = new Vector2(
-                    (float)x / chunkSize,
-                    (float)z / chunkSize
-                );
+
+                uvs[index] = new Vector2((float)x / chunkSize, (float)z / chunkSize);
+
+                colors[index] = worldGenerator.GetBiomeBlendColor(worldX, worldZ);
+
+                float left = worldGenerator.GetTerrainHeight(worldX - 1f, worldZ);
+                float right = worldGenerator.GetTerrainHeight(worldX + 1f, worldZ);
+
+                float back = worldGenerator.GetTerrainHeight(worldX, worldZ - 1f);
+                float forward = worldGenerator.GetTerrainHeight(worldX, worldZ + 1f);
+
+                float slopeX = (right - left) * 0.5f;
+                float slopeZ = (forward - back) * 0.5f;
+
+                normals[index] = new Vector3(-slopeX, 1f, -slopeZ).normalized;
             }
         }
 
@@ -115,11 +122,15 @@ public class WorldChunk : MonoBehaviour
         Mesh mesh = new Mesh();
         mesh.name = "World Chunk";
 
+        if (vertices.Length > 65535)
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
+        mesh.colors = colors;
+        mesh.normals = normals;
 
-        mesh.RecalculateNormals();
         mesh.RecalculateBounds();
 
         meshFilter.mesh = mesh;
@@ -139,9 +150,7 @@ public class WorldChunk : MonoBehaviour
         meshCollider.enabled = visible;
 
         foreach (Transform child in transform)
-        {
             child.gameObject.SetActive(visible);
-        }
     }
 
     private void OnDrawGizmosSelected()
@@ -149,10 +158,11 @@ public class WorldChunk : MonoBehaviour
         if (meshRenderer == null)
             meshRenderer = GetComponent<MeshRenderer>();
 
+        if (meshRenderer == null)
+            return;
+
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(
-            meshRenderer.bounds.center,
-            meshRenderer.bounds.size
-        );
+
+        Gizmos.DrawWireCube(meshRenderer.bounds.center, meshRenderer.bounds.size);
     }
 }

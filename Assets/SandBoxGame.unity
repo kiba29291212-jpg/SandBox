@@ -119,137 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &439639162
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 439639167}
-  - component: {fileID: 439639166}
-  - component: {fileID: 439639165}
-  - component: {fileID: 439639164}
-  - component: {fileID: 439639163}
-  m_Layer: 0
-  m_Name: Zombie
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &439639163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439639162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cfc17df9122f824ebae5c3b4cf065dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::QuaiDanhGan
-  attackDamage: 10
-  attackRange: 2
-  attackCooldown: 1
-  moveSpeed: 2.5
---- !u!136 &439639164
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439639162}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &439639165
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439639162}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &439639166
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439639162}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &439639167
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439639162}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 45.9, z: 40.3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1405826191
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,11 +165,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldGenerator
   player: {fileID: 1468602606}
   playerCamera: {fileID: 1875461221}
-  chunkPrefab: {fileID: 163179691724527296, guid: ff23651650da78b4aa0644a2e2e629c4, type: 3}
+  chunkPrefab: {fileID: 1601775435457523957, guid: ff23651650da78b4aa0644a2e2e629c4, type: 3}
   chunkSize: 32
   heightMultiplier: 20
   noiseScale: 0.02
+  terrainDetailHeight: 4
   seed: 12345
+  mountainRegionScale: 0.0015
+  mountainScale: 0.012
+  mountainHeight: 30
+  continentScale: 0.004
+  biomeScale: 0.003
+  oceanThreshold: 0.36
+  biomeBlendMaterial: {fileID: 0}
+  grasslandMaterial: {fileID: 2100000, guid: 5b16a49865b8a284fbb88764c6424a87, type: 2}
+  sparseForestMaterial: {fileID: 2100000, guid: a456db791d5bcdf4da98a83f633c5a23, type: 2}
+  forestMaterial: {fileID: 2100000, guid: 7106c94d730d37f44ac00478aeebb4f1, type: 2}
+  desertMaterial: {fileID: 2100000, guid: 8beed992118fd1746a843f062a7ea9e2, type: 2}
+  seaLevel: 0
+  oceanMaterial: {fileID: 2100000, guid: b1294c0888115264db697a977f0bbc0d, type: 2}
+  oceanSize: 1000
+  spawnSearchRadius: 1024
+  spawnSearchStep: 16
+  playerSpawnHeight: 2
   renderDistance: 4
   loadDistance: 6
   alwaysVisibleDistance: 1
@@ -488,7 +375,7 @@ Transform:
   m_GameObject: {fileID: 1468602599}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 23.96, z: 0}
+  m_LocalPosition: {x: 2.9, y: 21.3, z: 15.459}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -783,7 +670,7 @@ Transform:
   m_GameObject: {fileID: 2004913374}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 36.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -796,4 +683,3 @@ SceneRoots:
   - {fileID: 2004913377}
   - {fileID: 1468602606}
   - {fileID: 1405826192}
-  - {fileID: 439639167}

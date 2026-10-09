@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 1533379018757153159}
   - component: {fileID: 3662472254438339983}
   - component: {fileID: 8478704941596867731}
-  - component: {fileID: 163179691724527296}
-  - component: {fileID: -8466517219995067196}
+  - component: {fileID: 1601775435457523957}
+  - component: {fileID: -7432161919274902243}
   - component: {fileID: -3808240734255159679}
+  - component: {fileID: -8999235962028592406}
   m_Layer: 3
   m_Name: Chunk
   m_TagString: Untagged
@@ -116,7 +117,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &163179691724527296
+--- !u!114 &1601775435457523957
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56a2ad7f438f9941a4008ef09db8e83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldChunk
---- !u!114 &-8466517219995067196
+--- !u!114 &-7432161919274902243
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,8 +143,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
   resourcePrefabs:
   - {fileID: 8256636930620594116, guid: c9011639b42955b48a1dc0b3ce91061b, type: 3}
-  resourceCount: 10
-  minDistance: 6
+  resourceCount: 20
+  minDistance: 3
   raycastHeight: 100
 --- !u!205 &-3808240734255159679
 LODGroup:
@@ -169,3 +170,19 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
+--- !u!114 &-8999235962028592406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4888506891488981128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d75062a4af1c6444d814fc3a41e649ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  resourcePrefabs: []
+  resourceCount: 20
+  minDistance: 3
+  raycastHeight: 100

@@ -60,10 +60,7 @@
     <Compile Include="Assets\Script\PlayerInputActions.cs" />
     <Compile Include="Assets\Script\Player\Player.cs" />
     <Compile Include="Assets\Script\World\WorldGenerator.cs" />
-    <Compile Include="Assets\Script\Enemy\Short Range Attack\QuaiDanhGan.cs" />
-    <Compile Include="Assets\Script\Enemy\Far Range Attack\Arrow.cs" />
     <Compile Include="Assets\Script\Player\PlayerCamera.cs" />
-    <Compile Include="Assets\Script\Enemy\Far Range Attack\QuaiDanhXa.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

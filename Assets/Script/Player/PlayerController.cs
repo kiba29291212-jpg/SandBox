@@ -71,22 +71,14 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = input.Player.Move.ReadValue<Vector2>();
 
-        Vector3 cameraForward = playerCamera.transform.forward;
-        Vector3 cameraRight = playerCamera.transform.right;
-
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-
-        cameraForward.Normalize();
-        cameraRight.Normalize();
-
-        Vector3 direction = cameraForward * moveInput.y + cameraRight * moveInput.x;
+        Vector3 direction =
+            transform.forward * moveInput.y +
+            transform.right * moveInput.x;
 
         float speed = input.Player.Sprint.IsPressed() ? sprintSpeed : moveSpeed;
 
         controller.Move(direction * speed * Time.deltaTime);
     }
-
     private void HandleJump()
     {
         if (input.Player.Jump.WasPressedThisFrame() && isGrounded)
