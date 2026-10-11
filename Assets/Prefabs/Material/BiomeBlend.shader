@@ -1,0 +1,76 @@
+
+Shader "Custom/BiomeBlend"
+{
+    Properties
+    {
+        _BaseColor ("Base Color", Color) = (1,1,1,1)
+        _Brightness ("Brightness", Range(0.5, 1.5)) = 1
+        _Contrast ("Contrast", Range(0.5, 1.5)) = 1
+        _Saturation ("Saturation", Range(0, 2)) = 1
+        _Smoothness ("Smoothness", Range(0, 1)) = 0.1
+    }
+
+    SubShader
+    {
+        Tags
+        {
+            "RenderPipeline" = "UniversalPipeline"
+            "RenderType" = "Opaque"
+            "Queue" = "Geometry"
+        }
+
+        Pass
+        {
+            Tags { "LightMode" = "UniversalForward" }
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float4 color : COLOR;
+            };
+
+            struct Varyings
+            {
+                float4 positionHCS : SV_POSITION;
+                float4 color : COLOR;
+            };
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _BaseColor;
+                float _Brightness;
+                float _Contrast;
+                float _Saturation;
+                float _Smoothness;
+            CBUFFER_END
+
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                OUT.color = IN.color;
+                return OUT;
+            }
+
+            half4 frag(Varyings IN) : SV_Target
+            {
+                half3 color = IN.color.rgb * _BaseColor.rgb;
+
+                half gray = dot(color, half3(0.299, 0.587, 0.114));
+                color = lerp(gray.xxx, color, _Saturation);
+
+                color = (color - 0.5) * _Contrast + 0.5;
+                color *= _Brightness;
+                color = saturate(color);
+
+                return half4(color, 1);
+            }
+            ENDHLSL
+        }
+    }
+}
