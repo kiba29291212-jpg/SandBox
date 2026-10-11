@@ -129,6 +129,7 @@ Chỉ số cơ bản:
 
 * HP
 * Max HP
+* Speed
 * Stamina
 * Hunger
 * Defense
