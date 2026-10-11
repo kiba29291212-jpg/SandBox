@@ -449,7 +449,7 @@ Màn hình có thể xuất hiện:
 
 ## Khi chưa có The Glasses:
 
-> **The Entity không thể bị damage.**
+> **The Entity không thể bị dính sát thương.**
 
 Mọi loại tấn công đều vô hiệu.
 
