@@ -66,21 +66,18 @@ public class WorldGenerator : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogError("WorldGenerator: Player chưa được gán!");
             enabled = false;
             return;
         }
 
         if (chunkPrefab == null)
         {
-            Debug.LogError("WorldGenerator: Chưa gán Chunk Prefab!");
             enabled = false;
             return;
         }
 
         if (chunkSize <= 0)
         {
-            Debug.LogError("WorldGenerator: Chunk Size phải lớn hơn 0!");
             enabled = false;
             return;
         }
@@ -355,7 +352,7 @@ public class WorldGenerator : MonoBehaviour
 
             case BiomeType.Forest:
                 return forestMaterial;
-
+                
             default:
                 return null;
         }
@@ -384,7 +381,9 @@ public class WorldGenerator : MonoBehaviour
         Collider oceanCollider = ocean.GetComponent<Collider>();
 
         if (oceanCollider != null)
+        {
             Destroy(oceanCollider);
+        }
 
         Renderer oceanRenderer = ocean.GetComponent<Renderer>();
 
