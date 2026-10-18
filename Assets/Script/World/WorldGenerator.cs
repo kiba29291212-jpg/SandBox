@@ -151,7 +151,7 @@ public class WorldGenerator : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Không tìm thấy đất liền. Hãy tăng Spawn Search Radius.");
+            player.position = new Vector3(startPosition.x, GetTerrainHeight(startPosition.x, startPosition.z) + playerSpawnHeight, startPosition.z);
         }
     }
 
