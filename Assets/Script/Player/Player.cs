@@ -3,21 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    [Header("Health")]
-    [SerializeField] private float maxHealth = 100f;
+    [Header("Hp Settings")]
+    [SerializeField] private float MaxHP = 100f;
 
     private float currentHealth;
 
     private void Start()
     {
-        currentHealth = maxHealth;
+        currentHealth = MaxHP;
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-
-        Debug.Log("Player HP: " + currentHealth);
 
         if (currentHealth <= 0f)
         {
@@ -27,11 +25,7 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("PLAYER DIED - RESTART GAME");
-
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public float GetCurrentHealth()
@@ -41,6 +35,6 @@ public class Player : MonoBehaviour
 
     public float GetMaxHealth()
     {
-        return maxHealth;
+        return MaxHP;
     }
 }

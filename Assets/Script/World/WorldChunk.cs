@@ -49,8 +49,7 @@ public class WorldChunk : MonoBehaviour
 
             Material biomeMaterial = worldGenerator.GetBiomeMaterial(biome);
 
-            if (biomeMaterial != null)
-                meshRenderer.sharedMaterial = biomeMaterial;
+            if (biomeMaterial != null) meshRenderer.sharedMaterial = biomeMaterial;
         }
 
         resourceSpawner.Spawn(chunkCoordinate, chunkSize, seed, worldGenerator);
