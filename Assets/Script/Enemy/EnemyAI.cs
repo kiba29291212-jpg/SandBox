@@ -1,135 +1,41 @@
-
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAI : MonoBehaviour
 {
-    [Header("Player")]
-    public Transform player;
+    [Header("Enemy Settings")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float moveSpeed = 3.5f;
 
-    [Header("Detection")]
-    public float detectionRange = 15f;
-    public float loseTargetRange = 22f;
+    [Header("Combat Settings")]
+    [SerializeField] private float detectionRange = 10f;
+    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float attackDamage = 10f;
 
-    [Header("Movement")]
-    public float moveSpeed = 3.5f;
-    public float updatePathInterval = 0.2f;
-
-    [Header("NavMesh")]
-    public float navMeshSearchRadius = 2f;
-
-    private NavMeshAgent agent;
-    private bool isChasing;
-    private float pathTimer;
-
-    private void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
+    private float currentHealth;
+    private Transform player;
 
     private void Start()
     {
-        agent.speed = moveSpeed;
-
-        // Khong goi isStopped neu agent chua nam tren NavMesh.
-        if (agent.isOnNavMesh)
-        {
-            agent.isStopped = true;
-        }
+        currentHealth = maxHealth;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void Update()
     {
-        if (agent == null || !agent.enabled ||
-            !gameObject.activeInHierarchy)
-            return;
+        if (player == null) return;
 
-        // Cho NavMesh runtime san sang.
-        if (!agent.isOnNavMesh)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRange)
         {
-            TryAttachToNavMesh();
-            return;
+            MoveTowardsPlayer();
+
+            if (distanceToPlayer <= attackRange)
+            {
+                AttackPlayer();
+            }
         }
-
-        if (player == null)
-        {
-            StopChasing();
-            return;
-        }
-
-        float distance = Vector3.Distance(
-            transform.position,
-            player.position
-        );
-
-        if (!isChasing && distance <= detectionRange)
-        {
-            isChasing = true;
-            pathTimer = 0f;
-        }
-
-        if (isChasing && distance >= loseTargetRange)
-        {
-            StopChasing();
-            return;
-        }
-
-        if (isChasing)
-        {
-            ChasePlayer();
-        }
-    }
-
-    private void TryAttachToNavMesh()
-    {
-        NavMeshHit hit;
-
-        if (NavMesh.SamplePosition(
-            transform.position,
-            out hit,
-            navMeshSearchRadius,
-            agent.areaMask))
-        {
-            agent.Warp(hit.position);
-
-            if (agent.isOnNavMesh)
-                agent.isStopped = !isChasing;
-        }
-    }
-
-    private void ChasePlayer()
-    {
-        if (!agent.isOnNavMesh)
-            return;
-
-        agent.isStopped = false;
-
-        pathTimer -= Time.deltaTime;
-
-        if (pathTimer <= 0f)
-        {
-            agent.SetDestination(player.position);
-            pathTimer = updatePathInterval;
-        }
-    }
-
-    private void StopChasing()
-    {
-        isChasing = false;
-
-        if (agent != null &&
-            agent.enabled &&
-            agent.isOnNavMesh)
-        {
-            agent.isStopped = true;
-            agent.ResetPath();
-        }
-    }
-
-    private void OnDisable()
-    {
-        isChasing = false;
     }
 
     private void OnDrawGizmosSelected()
@@ -137,7 +43,22 @@ public class EnemyAI : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, loseTargetRange);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+    private void MoveTowardsPlayer()
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        transform.position += direction * moveSpeed * Time.deltaTime;
+    }
+
+    private void AttackPlayer()
+    {
+        Player playerScript = player.GetComponent<Player>();
+        if (playerScript != null)
+        {
+            playerScript.TakeDamage(attackDamage);
+        }
     }
 }

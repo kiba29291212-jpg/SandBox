@@ -20,7 +20,6 @@ public class ResourceSpawner : MonoBehaviour
 
         if (terrainCollider == null)
         {
-            Debug.LogError("NO TERRAIN MESH COLLIDER!");
             return;
         }
 
@@ -71,8 +70,6 @@ public class ResourceSpawner : MonoBehaviour
 
             spawnedCount++;
         }
-
-        Debug.Log("TOTAL RESOURCES: " + spawnedCount);
     }
 
     private void AlignToGround(GameObject resource, Vector3 groundPosition)
