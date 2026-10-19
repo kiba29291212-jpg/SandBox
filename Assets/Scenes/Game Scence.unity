@@ -214,9 +214,9 @@ MonoBehaviour:
   sparseForestMaterial: {fileID: 2100000, guid: 5b16a49865b8a284fbb88764c6424a87, type: 2}
   forestMaterial: {fileID: 2100000, guid: 7106c94d730d37f44ac00478aeebb4f1, type: 2}
   desertMaterial: {fileID: 2100000, guid: 8beed992118fd1746a843f062a7ea9e2, type: 2}
-  seaLevel: 0
+  seaLevel: 1
   oceanMaterial: {fileID: 2100000, guid: b1294c0888115264db697a977f0bbc0d, type: 2}
-  oceanSize: 2000
+  oceanSize: 1000
   spawnSearchRadius: 1024
   spawnSearchStep: 16
   playerSpawnHeight: 2
