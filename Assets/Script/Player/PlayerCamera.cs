@@ -37,6 +37,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void Update()
     {
+        if(InventoryUI.IsOpen) return;
         Look();
     }
 

@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if(InventoryUI.IsOpen) return;
         CheckGround();
         HandleMovement();
         HandleJump();

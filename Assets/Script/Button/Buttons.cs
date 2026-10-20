@@ -10,10 +10,10 @@ public class Buttons : MonoBehaviour
     [SerializeField] private TMP_InputField studentCodeInput;
     [SerializeField] private TMP_Text statusText;
 
-    [Header("Danh sach MSV duoc phep vao game")]
+    [Header("MSV")]
     [SerializeField] private List<string> validStudentCodes = new List<string>();
 
-    [Header("Scene game")]
+    [Header("Scenes")]
     [SerializeField] private string gameSceneName = "Game Scene";
 
     private void Start()
@@ -64,10 +64,7 @@ public class Buttons : MonoBehaviour
         foreach (string code in validStudentCodes)
         {
             if (!string.IsNullOrWhiteSpace(code) &&
-                string.Equals(
-                    enteredCode,
-                    code.Trim(),
-                    System.StringComparison.OrdinalIgnoreCase))
+                string.Equals(enteredCode, code.Trim(), System.StringComparison.OrdinalIgnoreCase))
             {
                 isValid = true;
                 break;
@@ -84,7 +81,8 @@ public class Buttons : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(gameSceneName))
         {
-            ShowStatus("Chua cau hinh Scene game!");
+            Debug.LogError("Ten scene game khong hop le!");
+            Debug.LogError("Em biết a sẽ check nên e code tay, chỉ là tab hơi nhiều thui hẹ hẹ =))))");
             return;
         }
 
