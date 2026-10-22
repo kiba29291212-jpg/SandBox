@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Buttons : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class Buttons : MonoBehaviour
     [SerializeField] private TMP_Text statusText;
 
     [Header("MSV")]
-    [SerializeField] private List<string> D26PASS = new List<string>();
+    [SerializeField] private List<string> D26MSV = new List<string>();
 
     [Header("Scenes")]
     [SerializeField] private string gameSceneName = "Game Scene";
@@ -61,10 +62,9 @@ public class Buttons : MonoBehaviour
 
         bool isValid = false;
 
-        foreach (string code in D26PASS)
+        foreach (string code in D26MSV)
         {
-            if (!string.IsNullOrWhiteSpace(code) &&
-                string.Equals(enteredCode, code.Trim(), System.StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(code) &&string.Equals(enteredCode, code.Trim(), System.StringComparison.OrdinalIgnoreCase))
             {
                 isValid = true;
                 break;
@@ -81,11 +81,11 @@ public class Buttons : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(gameSceneName))
         {
-            Debug.LogError("Ten scene game khong hop le!");
             Debug.LogError("Em biết a sẽ check nên e code tay, chỉ là tab tab hơi nhiều thui hẹ hẹ =))))");
             return;
         }
         SceneManager.LoadScene(gameSceneName);
+        D26PassGCC.D26MSV = enteredCode;
     }
 
     private void ShowStatus(string message)

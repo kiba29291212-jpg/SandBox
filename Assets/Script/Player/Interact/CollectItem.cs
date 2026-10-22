@@ -24,6 +24,8 @@ public class CollectItem : MonoBehaviour
 
     private void OnDisable()
     {
+        if (input == null)
+            return;
         input.Player.Interact.performed -= OnInteract;
         input.Disable();
     }

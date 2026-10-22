@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public enum BiomeType
 {
     Ocean,
@@ -13,6 +12,7 @@ public enum BiomeType
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
 [RequireComponent(typeof(ResourceSpawner))]
+
 public class WorldChunk : MonoBehaviour
 {
     private MeshFilter meshFilter;

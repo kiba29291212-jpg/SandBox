@@ -56,6 +56,7 @@
     <Compile Include="Assets\Script\Button\Buttons.cs" />
     <Compile Include="Assets\Script\World\WorldChunk.cs" />
     <Compile Include="Assets\Script\Giao Diện\InventoryManager.cs" />
+    <Compile Include="Assets\Script\Button\OpenChest.cs" />
     <Compile Include="Assets\Script\Player\PlayerController.cs" />
     <Compile Include="Assets\Script\World\ResourceSpawner.cs" />
     <Compile Include="Assets\Script\Player\Interact\Pickup.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Assets\Script\Giao Diện\InventoryUI.cs" />
     <Compile Include="Assets\Script\Player\Player.cs" />
     <Compile Include="Assets\Script\Giao Diện\InventoryItemSlot.cs" />
+    <Compile Include="Assets\Script\Button\D26PassGCC.cs" />
     <Compile Include="Assets\Script\World\WorldGenerator.cs" />
     <Compile Include="Assets\Script\Player\PlayerCamera.cs" />
   </ItemGroup>
