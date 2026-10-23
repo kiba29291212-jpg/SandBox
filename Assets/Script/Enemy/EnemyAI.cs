@@ -17,8 +17,13 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        
+
         currentHealth = maxHealth;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        if (GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+        }
     }
 
     private void Update()

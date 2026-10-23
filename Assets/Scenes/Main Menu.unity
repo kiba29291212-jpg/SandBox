@@ -2202,7 +2202,11 @@ MonoBehaviour:
   statusText: {fileID: 247709136}
   D26MSV:
   - B25DCTN112
-  - B25DCTN113
+  - B24DCKH021
+  - 0
+  - 1
+  - ANH TOAN XAU TRAI
+  - 'TRIPLE T '
   gameSceneName: Game Scence
 --- !u!4 &1913137369
 Transform:

@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
+        if (input == null)
+            return;
         input.Disable();
     }
 

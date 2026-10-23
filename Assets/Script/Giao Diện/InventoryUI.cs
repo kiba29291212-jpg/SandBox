@@ -22,6 +22,8 @@ public class InventoryUI : MonoBehaviour
 
     private void OnDisable()
     {
+        if (input == null)
+            return;
         input.Player.Inventory.performed -= OnInventoryPerformed;
         input.Disable();
     }

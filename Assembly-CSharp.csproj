@@ -56,11 +56,14 @@
     <Compile Include="Assets\Script\Button\Buttons.cs" />
     <Compile Include="Assets\Script\World\WorldChunk.cs" />
     <Compile Include="Assets\Script\Giao Diện\InventoryManager.cs" />
+    <Compile Include="Assets\Script\World\DayNight.cs" />
     <Compile Include="Assets\Script\Button\OpenChest.cs" />
     <Compile Include="Assets\Script\Player\PlayerController.cs" />
     <Compile Include="Assets\Script\World\ResourceSpawner.cs" />
+    <Compile Include="Assets\Script\World\WorldSeed.cs" />
     <Compile Include="Assets\Script\Player\Interact\Pickup.cs" />
     <Compile Include="Assets\Script\Items\ItemData.cs" />
+    <Compile Include="Assets\Script\Button\TimeCheck.cs" />
     <Compile Include="Assets\Script\Enemy\EnemyAI.cs" />
     <Compile Include="Assets\Script\Player\Interact\CollectItem.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="Assets\Script\Button\D26PassGCC.cs" />
     <Compile Include="Assets\Script\World\WorldGenerator.cs" />
     <Compile Include="Assets\Script\Player\PlayerCamera.cs" />
+    <Compile Include="Assets\Script\Enemy\EnemySpawner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -29,6 +29,8 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnDisable()
     {
+        if (input == null)
+            return;
         input.Disable();
 
         Cursor.lockState = CursorLockMode.None;
