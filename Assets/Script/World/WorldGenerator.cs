@@ -17,7 +17,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private float heightMultiplier = 20f;
     [SerializeField] private float noiseScale = 0.02f;
     [SerializeField] private float terrainDetailHeight = 4f;
-    [SerializeField] private int seed = 12345;
+    [SerializeField] public int seed = 12345;
 
     [Header("Mountains")]
     [SerializeField] private float mountainRegionScale = 0.0015f;

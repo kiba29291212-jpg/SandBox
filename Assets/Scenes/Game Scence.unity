@@ -227,6 +227,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 27185155}
   m_CullTransparentMesh: 1
+--- !u!1 &33532835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 33532837}
+  - component: {fileID: 33532836}
+  m_Layer: 0
+  m_Name: Entity Night Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &33532836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33532835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da90f57528466234fa280d38965d3b87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityNightManager
+  dayNight: {fileID: 410087043}
+  bossPrefab: {fileID: 2115922054310442289, guid: b1b9d3c9bfcde7d40b620e62a6d375e0, type: 3}
+  spawnPoint: {fileID: 0}
+  spawnDistance: 150
+  spawnHeight: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!4 &33532837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33532835}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.2961, y: 0, z: -71.55351}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &44261225
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,10 +398,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a72d3fe5ef09d174f88b24780191062d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefabs:
+  player: {fileID: 1177570947}
+  worldGenerator: {fileID: 318833998}
+  dayNightCycle: {fileID: 410087043}
+  desertMonsters:
   - {fileID: 1692552047435314568, guid: c5ef8f32f41475f459c89015a3d0f6d5, type: 3}
-  spawnPoints:
-  - {fileID: 0}
+  grasslandMonsters:
+  - {fileID: 1692552047435314568, guid: c5ef8f32f41475f459c89015a3d0f6d5, type: 3}
+  sparseForestMonsters:
+  - {fileID: 1692552047435314568, guid: c5ef8f32f41475f459c89015a3d0f6d5, type: 3}
+  forestMonsters:
+  - {fileID: 1692552047435314568, guid: c5ef8f32f41475f459c89015a3d0f6d5, type: 3}
+  minSpawnDistance: 20
+  maxSpawnDistance: 35
+  spawnYOffset: 0
+  positionAttempts: 15
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  raycastStartHeight: 10
+  baseMaxMonsters: 5
+  extraMonstersPerDay: 2
+  baseSpawnInterval: 12
+  minimumSpawnInterval: 3
+  intervalReductionPerDay: 1
 --- !u!1 &88207229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1727,6 +1799,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1868,6 +1941,26 @@ MonoBehaviour:
   mouseSensitivity: 30
   minLookAngle: -90
   maxLookAngle: 90
+  entityPullSpeed: 2
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce002fee8bd69f540be826bae3ba4a47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityLookEffect
+  playerCamera: {fileID: 330585545}
+  glasses: {fileID: 1177570950}
+  playerHealth: {fileID: 1177570949}
+  lookRange: 300
+  entityLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &338636881
 GameObject:
   m_ObjectHideFlags: 0
@@ -2569,8 +2662,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbf0c49c9f2d3a4bac207cb4522942e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayNight
-  dayDuration: 120
-  nightDuration: 60
+  dayDuration: 30
+  nightDuration: 120
   directionalLight: {fileID: 410087040}
   dayNightColorGradient:
     serializedVersion: 2
@@ -5383,6 +5476,8 @@ GameObject:
   - component: {fileID: 1177570943}
   - component: {fileID: 1177570942}
   - component: {fileID: 1177570948}
+  - component: {fileID: 1177570949}
+  - component: {fileID: 1177570950}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5405,7 +5500,7 @@ MonoBehaviour:
   moveSpeed: 10
   sprintSpeed: 20
   jumpHeight: 3
-  gravity: -20
+  gravity: -40
   groundCheckDistance: 0.5
 --- !u!143 &1177570943
 CharacterController:
@@ -5543,6 +5638,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CollectItem
   playerCamera: {fileID: 330585545}
   pickupDistance: 3
+--- !u!114 &1177570949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177570941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f637439d15e3e4c45bbbb7be9d5e9178, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityPlayerHealth
+  maxHP: 100
+--- !u!114 &1177570950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177570941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f25b3ceea6fabc469d6f8a7cc99e2b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityGlasses
+  equipped: 0
 --- !u!1 &1226086023
 GameObject:
   m_ObjectHideFlags: 0
@@ -11335,3 +11456,4 @@ SceneRoots:
   - {fileID: 661560050}
   - {fileID: 2028137353}
   - {fileID: 1370186627}
+  - {fileID: 33532837}

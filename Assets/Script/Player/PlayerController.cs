@@ -54,13 +54,7 @@ public class PlayerController : MonoBehaviour
 
         float distance = controller.height / 2f + groundCheckDistance;
 
-        isGrounded = Physics.SphereCast(
-            origin,
-            controller.radius * 0.9f,
-            Vector3.down,
-            out RaycastHit hit,
-            distance
-        );
+        isGrounded = Physics.SphereCast(origin, controller.radius * 0.9f, Vector3.down, out RaycastHit hit, distance);
 
         Debug.DrawRay(origin, Vector3.down * distance, isGrounded ? Color.green : Color.red);
 
@@ -74,9 +68,7 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = input.Player.Move.ReadValue<Vector2>();
 
-        Vector3 direction =
-            transform.forward * moveInput.y +
-            transform.right * moveInput.x;
+        Vector3 direction = transform.forward * moveInput.y + transform.right * moveInput.x;
 
         float speed = input.Player.Sprint.IsPressed() ? sprintSpeed : moveSpeed;
 

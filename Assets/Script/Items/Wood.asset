@@ -15,4 +15,4 @@ MonoBehaviour:
   itemName: Wood
   icon: {fileID: 21300000, guid: edfa6703e64c0d5459846ab20b53fa3a, type: 3}
   maxStack: 99
-  heldPrefab: {fileID: 397621077123329482, guid: 38611feaba766a84a93fd2d3a976b55d, type: 3}
+  heldPrefab: {fileID: 8256636930620594116, guid: c9011639b42955b48a1dc0b3ce91061b, type: 3}
